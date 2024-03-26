@@ -144,8 +144,10 @@ def animus(cfg, **kwargs):  # pylint: disable=possibly-unused-variable,unused-ar
         for turn in sample['conversation']:
             sample['prompt'] += '<|im_start|>' + turn['role'] + '\n' + turn['content'] + '<|im_end|>\n'
         
+        sample['prompt'] += '<|im_start|>assistant\n'
+
         # Prepare the accepted and rejected segments
-        sample["chosen"] = '<|im_start|>assistant\n' + sample['chosen'] + '<|im_end|>'
+        sample["chosen"] = sample['chosen'] + '<|im_end|>'
         sample["rejected"] = sample['rejected'] + '<|im_end|>'
         return sample
 
