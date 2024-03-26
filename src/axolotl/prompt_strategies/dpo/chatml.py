@@ -131,3 +131,22 @@ def ultra(cfg, **kwargs):  # pylint: disable=possibly-unused-variable,unused-arg
         return sample
 
     return transform_fn
+
+def animus(cfg, **kwargs):  # pylint: disable=possibly-unused-variable,unused-argument
+    """
+    for animus conversations
+    """
+
+    def transform_fn(sample):
+        sample['prompt'] = '<|im_start|>system\n' + sample['system'] + '<|im_end|>\n'
+        
+        # Loop through each conversation turn and add it to the prompt
+        for turn in sample['conversation']:
+            sample['prompt'] += '<|im_start|>' + turn['role'] + '\n' + turn['content'] + '<|im_end|>\n'
+        
+        # Prepare the accepted and rejected segments
+        sample["chosen"] = '<|im_start|>assistant\n' + sample['chosen'] + '<|im_end|>'
+        sample["rejected"] = sample['rejected'] + '<|im_end|>'
+        return sample
+
+    return transform_fn
